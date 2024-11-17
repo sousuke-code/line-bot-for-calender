@@ -3,6 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { Client, WebhookEvent,middleware } from "@line/bot-sdk";
 import ngrok  from "ngrok";
+import { handleEvent } from "./messageHandler";
 
 dotenv.config();
 
@@ -32,18 +33,6 @@ app.post("/webhook", async(req, res) => {
     }
 })
 
-function handleEvent(event: WebhookEvent) {
-    if(event.type !== "message" || event.message.type !== "text") {
-        return Promise.resolve(null);
-    }
-
-    return client.replyMessage(event.replyToken, [
-        {
-            type: "text",
-            text: event.message.text,
-        }
-    ])
-}
 
 app.listen(port, async() => {
     console.log(`Sercver is runnning on port ${port}`);
