@@ -6,7 +6,7 @@ dotenv.config();
 export const oauth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID, // Google Cloudで取得したクライアントID
     process.env.GOOGLE_CLIENT_SECRET, // クライアントシークレット
-    "http://localhost:3000/oauth2callback" // リダイレクトURI
+    "https://line-bot-for-calender.vercel.app/oauth2callback" // リダイレクトURI
 );
 
 export const generateAuthUrl = () => {
