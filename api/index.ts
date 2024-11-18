@@ -2,21 +2,20 @@ import express from "express";
 
 import dotenv from "dotenv";
 import { Client, WebhookEvent,middleware } from "@line/bot-sdk";
-import ngrok  from "ngrok";
-import { handleEvent } from "./messageHandler";
+import { handleEvent } from "../src/messageHandler";
 
 dotenv.config();
 
 
 const app = express();
-const port = parseInt(process.env.PORT || "3000", 10);
+
 
 const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN!,
   channelSecret: process.env.CHANNEL_SECRET!,
 };
 
-app.use(middleware(config));
+app.use("/webhook",middleware(config));
 
 const client = new Client(config);
 
@@ -34,13 +33,4 @@ app.post("/webhook", async(req, res) => {
 })
 
 
-app.listen(port, async() => {
-    console.log(`Sercver is runnning on port ${port}`);
-
-    try {
-        const url = await ngrok.connect(port); 
-        console.log(`ngrok URL: ${url}/webhook`);     
-    } catch (error) {
-        
-    }
-})
+export default app;

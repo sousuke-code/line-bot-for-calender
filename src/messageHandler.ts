@@ -1,5 +1,8 @@
 import { Client,WebhookEvent,Message } from "@line/bot-sdk";
 import dotenv from "dotenv";
+import { generateAuthUrl } from "./googleAuth";
+import { addEventToCalendar } from "./calenderService";
+import { parseMessageToEvent } from "./utils/messageParser";
 
 dotenv.config();
 
@@ -12,7 +15,7 @@ const config = {
 const client = new Client(config);
 
 
-export const  handleEvent = (event: WebhookEvent) => {
+export const  handleEvent = async(event: WebhookEvent) => {
     if (event.type !== "message" || event.message.type !== "text" ) {
         return Promise.resolve(null);
     }
@@ -21,26 +24,33 @@ export const  handleEvent = (event: WebhookEvent) => {
 
     let replyMessage: Message;
 
-    switch(userMessage) {
-        case "こんにちは":
-            replyMessage = {
-                type:"text",
-                text: "何かお手伝いしましょうか？",
-            };
-            break;
-        case "よてい":
-            replyMessage = {
-                type: "text",
-                text: "日程と予定を入力して下さい",
-            };
-            break;
-        default:
-            replyMessage = {
-                type:"text",
-                text: "よていと打って下さい",
-            };
-            break;
+    if(userMessage === "認証") {
+        const authUrl = generateAuthUrl();
+        return client.replyMessage(event.replyToken, {
+            type: "text",
+            text: `以下のリンクからGoogle認証を行って下さい:\n${authUrl}`,
+        });
     }
 
-   return client.replyMessage(event.replyToken, [replyMessage]);
+
+    const parsedEvent = parseMessageToEvent(userMessage);
+    if (parsedEvent) {
+        try {
+            const result = await addEventToCalendar(parsedEvent);
+            return client.replyMessage(event.replyToken, {
+                type: "text",
+                text: "予定をカレンダーに追加しました！",
+            });
+        } catch (error) {
+            return client.replyMessage(event.replyToken, {
+                type: "text",
+                text: "予定の追加に失敗しました。再試行してください。",
+            });
+        }
+    } else {
+        return client.replyMessage(event.replyToken, {
+            type: "text",
+            text: "予定を追加するには「YYYY/MM/DD HH:MM タイトル」の形式で送信してください。",
+        });
+    }
 }
