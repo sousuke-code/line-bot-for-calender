@@ -1,40 +1,28 @@
+import chrono from "chrono-node";
+
 export const parseMessageToEvent = (message: string) => {
-    const regex = /(\d{4}\/\d{2}\/\d{2}) (\d{2}:\d{2}) (.+)/;
-    const match = message.match(regex);
+    // chronoでメッセージを解析
+    const parsed = chrono.parse(message, new Date(), { forwardDate: true });
 
-    if (!match) {
-        console.error("Invalid message format:", message); // デバッグ用
-        throw new Error("Invalid message format. Please use 'YYYY/MM/DD HH:MM タイトル'.");
+    if (parsed.length === 0) {
+        throw new Error("メッセージから日時情報を解析できませんでした。正しい形式で送信してください。");
     }
 
-    const [_, date, time, title] = match;
-    const [year, month, day] = date.split("/").map(Number);
-    const [hour, minute] = time.split(":").map(Number);
+    const result = parsed[0]; // 最初の解析結果を使用
+    const startDateTime = result.start.date(); // 開始日時
+    const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000); // 1時間後を終了日時とする
 
-    // 日付の妥当性チェック
-    if (month < 1 || month > 12 || day < 1 || day > 31) {
-        throw new Error(`Invalid date: ${date}`);
+    // イベントタイトルを取得（日時部分を除外）
+    const title = message.replace(result.text, "").trim();
+
+    if (!title) {
+        throw new Error("イベントのタイトルが見つかりませんでした。");
     }
 
-    // 時刻の妥当性チェック
-    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-        throw new Error(`Invalid time: ${time}`);
-    }
-
-    const startDateTime = `${date}T${time}:00+09:00`;
-
-    if (isNaN(new Date(startDateTime).getTime())) {
-        console.error("Invalid date or time value:", startDateTime); // デバッグ用
-        throw new Error("Invalid date or time value. Please check your input.");
-    }
-
-    const endDateTime = new Date(
-        new Date(startDateTime).getTime() + 60 * 60 * 1000 // 1時間後
-    ).toISOString();
-
+    // Googleカレンダー用のイベントデータを作成
     return {
         summary: title,
-        start: { dateTime: startDateTime, timeZone: "Asia/Tokyo" },
-        end: { dateTime: endDateTime, timeZone: "Asia/Tokyo" },
+        start: { dateTime: startDateTime.toISOString(), timeZone: "Asia/Tokyo" },
+        end: { dateTime: endDateTime.toISOString(), timeZone: "Asia/Tokyo" },
     };
 };
