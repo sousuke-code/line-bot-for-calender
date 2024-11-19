@@ -25,7 +25,14 @@ export const  handleEvent = async(event: WebhookEvent) => {
     let replyMessage: Message;
 
     if(userMessage === "認証") {
-        const authUrl = generateAuthUrl();
+        const userId  = event.source.userId;
+        if (!userId) {
+            return client.replyMessage(event.replyToken, {
+                type: "text",
+                text: "もう一度送信して下さい"
+            })
+        }
+        const authUrl = generateAuthUrl(userId);
         return client.replyMessage(event.replyToken, {
             type: "text",
             text: `以下のリンクからGoogle認証を行って下さい:\n${authUrl}`,
