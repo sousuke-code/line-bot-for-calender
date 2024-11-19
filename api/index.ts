@@ -27,7 +27,7 @@ app.post("/webhook", async(req, res) => {
         await Promise.all(events.map(handleEvent));
         res.status(200).send("OK")
     } catch (error) {
-        console.log("faile to connect");
+        console.error("faile to connect", error);
         res.status(500).send("internal error");
     }
 })
