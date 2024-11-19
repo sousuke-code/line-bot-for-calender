@@ -13,11 +13,12 @@ export const oauth2Client = new google.auth.OAuth2(
  "https://line-bot-for-calender.vercel.app/api/oauth2callback"
 );
 
-export const generateAuthUrl = () => {
+export const generateAuthUrl = (userId : string) => {
   const scopes = ["https://www.googleapis.com/auth/calendar"];
   return oauth2Client.generateAuthUrl({
     access_type: "offline",
     scope: scopes,
+    state: userId,
   });
 };
 
