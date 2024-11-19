@@ -1,7 +1,7 @@
 import { google } from "googleapis";
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import { supabase } from "./Supabase";
+import { supabase } from "./supabaseClient";
 
 dotenv.config();
 
