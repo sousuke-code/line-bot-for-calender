@@ -3,6 +3,10 @@
       {
         "source": "/webhook",
         "destination": "/api/index"
+      },
+      {
+        "source": "/oauth2callback",
+        "destination": "/api/oauth2callback"
       }
     ]
   }
