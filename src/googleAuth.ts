@@ -10,7 +10,7 @@ const app = express();
 export const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID, 
   process.env.GOOGLE_CLIENT_SECRET, 
- "https://line-bot-for-calender.vercel.app/oauth2callback"
+ "https://line-bot-for-calender.vercel.app/api/oauth2callback"
 );
 
 export const generateAuthUrl = () => {
