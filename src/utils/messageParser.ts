@@ -2,7 +2,7 @@ import chrono from "chrono-node";
 
 export const parseMessageToEvent = (message: string) => {
     // chronoでメッセージを解析
-    const parsed = chrono.parse(message, new Date(), { forwardDate: true });
+    const parsed = chrono.parse(message); 
 
     if (parsed.length === 0) {
         throw new Error("メッセージから日時情報を解析できませんでした。正しい形式で送信してください。");
