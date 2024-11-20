@@ -1,7 +1,7 @@
 import { Client,WebhookEvent,Message } from "@line/bot-sdk";
 import dotenv from "dotenv";
 import { generateAuthUrl } from "./googleAuth";
-import { addEventToUserCalendar } from "./calenderService";
+import { addEventToCalendar } from "./calenderService";
 import { parseMessageToEvent } from "./utils/messageParser";
 
 dotenv.config();
@@ -45,7 +45,7 @@ export const  handleEvent = async(event: WebhookEvent) => {
     const userId  = event.source.userId;
     if (parsedEvent && userId) {
         try {
-            const result = await addEventToUserCalendar(userId , parsedEvent);
+            const result = await addEventToCalendar(userId , parsedEvent);
             return client.replyMessage(event.replyToken, {
                 type: "text",
                 text: "予定をカレンダーに追加しました！",
