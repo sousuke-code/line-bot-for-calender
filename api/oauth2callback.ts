@@ -28,6 +28,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       const { error } = await supabase.from("user_tokens").insert({
         access_token: tokens.access_token,
         line_user_id: userId,
+        refresh_token : tokens.refresh_token,
+        expiry_date: tokens.expiry_date
       });
   
       if (error) {
