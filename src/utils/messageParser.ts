@@ -1,4 +1,4 @@
-import chrono from "chrono-node";
+const chrono = require("chrono-node");
 
 export const parseMessageToEvent = (message: string) => {
     // chronoでメッセージを解析
