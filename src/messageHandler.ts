@@ -1,7 +1,7 @@
 import { Client,WebhookEvent,Message } from "@line/bot-sdk";
 import dotenv from "dotenv";
 import { generateAuthUrl } from "./googleAuth";
-import { addEventToCalendar } from "./calenderService";
+import { addEventToUserCalendar } from "./calenderService";
 import { parseMessageToEvent } from "./utils/messageParser";
 
 dotenv.config();
