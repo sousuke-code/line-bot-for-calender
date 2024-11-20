@@ -1,36 +1,24 @@
-import { google } from "googleapis";
+import {google} from "googleapis";
+import { oauth2Client } from "./googleAuth";
 import { getUserAccessToken } from "./googleAuth";
 
-// イベントの型定義
-interface Event {
-    title: string;
-    startDateTime: string;
-    endDateTime: string;
-}
 
-export const addEventToUserCalendar = async (
-    userId: string,
-    event: Event
-): Promise<boolean> => {
+
+export const addEventToCalendar = async(userId: string,event: any) => {
     const tokens = await getUserAccessToken(userId);
-    const oauthClient = new google.auth.OAuth2();
-    oauthClient.setCredentials(tokens);
+    const oauth2Client = new google.auth.OAuth2();
+    oauth2Client.setCredentials(tokens);
 
-    const calendar = google.calendar({ version: "v3", auth: oauthClient });
+    const calendar = google.calendar({ version: "v3", auth: oauth2Client});
 
     try {
-        const res = await calendar.events.insert({
-            calendarId: "primary",
-            requestBody: {
-                summary: event.title,
-                start: { dateTime: event.startDateTime, timeZone: "Asia/Tokyo" },
-                end: { dateTime: event.endDateTime, timeZone: "Asia/Tokyo" },
-            },
+        const response = await calendar.events.insert({
+            calendarId : "primary",
+            requestBody: event,
         });
-
-        return res.status === 200;
+        return response.data;
     } catch (error) {
-        console.error("Failed to add event:", error);
-        return false;
+        console.error("failed to add event:", error);
+        throw error;
     }
 };

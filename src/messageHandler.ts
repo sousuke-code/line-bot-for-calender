@@ -40,11 +40,12 @@ export const  handleEvent = async(event: WebhookEvent) => {
     }
 
 
-
+    
     const parsedEvent = parseMessageToEvent(userMessage);
-    if (parsedEvent) {
+    const userId  = event.source.userId;
+    if (parsedEvent && userId) {
         try {
-            const result = await addEventToCalendar(parsedEvent);
+            const result = await addEventToUserCalendar(userId , parsedEvent);
             return client.replyMessage(event.replyToken, {
                 type: "text",
                 text: "予定をカレンダーに追加しました！",
