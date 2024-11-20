@@ -2,6 +2,7 @@ import { google } from "googleapis";
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import { supabase } from "./supabaseClient";
+import { assert, error } from "console";
 
 dotenv.config();
 
@@ -28,6 +29,22 @@ export const getAccessToken = async (code: string) => {
   return tokens;
 };
 
+export const saveUserAccessToken = async (userId: string, tokens:any) => {
+    const { access_token, refresh_token, expiry_date} = tokens;
+    await supabase
+     .from('user_tokens')
+     .update({ access_token, refresh_token, expiry_date})
+     .eq('line_user_id', userId)
+};
 
+export const getUserAccessToken = async(userId : string) => {
+    const {data, error} = await supabase
+      .from('user_tokens')
+      .select('access_token, refresh_token, expiry_date')
+      .eq('line_user_id', userId)
+      .single();
+    if (error) throw error;
+    return data;
+}
 
 
