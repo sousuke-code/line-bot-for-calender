@@ -51,6 +51,7 @@ export const  handleEvent = async(event: WebhookEvent) => {
                 text: "予定をカレンダーに追加しました！",
             });
         } catch (error) {
+            console.error("failed to add event:", error);
             return client.replyMessage(event.replyToken, {
                 type: "text",
                 text: "予定の追加に失敗しました。再試行してください。",
