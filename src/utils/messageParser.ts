@@ -5,7 +5,7 @@ export const parseMessageToEvent = (message: string) => {
     const parsed = chrono.parse(message); 
 
     if (parsed.length === 0) {
-        throw new Error("メッセージから日時情報を解析できませんでした。正しい形式で送信してください。");
+        throw new Error("メッセージから日時情報を解析できませんでした。");
     }
 
     const result = parsed[0]; // 最初の解析結果を使用

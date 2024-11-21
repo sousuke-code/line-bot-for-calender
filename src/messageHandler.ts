@@ -43,6 +43,13 @@ export const  handleEvent = async(event: WebhookEvent) => {
     
     const parsedEvent = parseMessageToEvent(userMessage);
     const userId  = event.source.userId;
+    if (!userId)  {
+        return client.replyMessage(event.replyToken, {
+            type: "text",
+            text: "もう一度送信して下さい"
+        });
+    }
+    
     if (parsedEvent && userId) {
         try {
             const result = await addEventToCalendar(userId , parsedEvent);
