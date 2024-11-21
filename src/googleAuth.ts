@@ -20,6 +20,7 @@ export const generateAuthUrl = (userId : string) => {
     access_type: "offline",
     scope: scopes,
     state: userId,
+    prompt: "consent",
   });
 };
 
