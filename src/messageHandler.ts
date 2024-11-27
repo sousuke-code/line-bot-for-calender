@@ -34,8 +34,25 @@ export const  handleEvent = async(event: WebhookEvent) => {
         }
         const authUrl = generateAuthUrl(userId);
         return client.replyMessage(event.replyToken, {
-            type: "text",
-            text: `以下のリンクからGoogle認証を行って下さい:\n${authUrl}`,
+          
+          "type": "template",
+  "altText": "this is a confirm template",
+  "template": {
+    "type": "confirm",
+    "text": "Are you sure?",
+    "actions": [
+      {
+        "type": "message",
+        "label": "Yes",
+        "text": "yes"
+      },
+      {
+        "type": "message",
+        "label": "No",
+        "text": "no"
+      }
+    ]
+  }
         });
     }
 
