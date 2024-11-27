@@ -33,27 +33,16 @@ export const  handleEvent = async(event: WebhookEvent) => {
             })
         }
         const authUrl = generateAuthUrl(userId);
-        return client.replyMessage(event.replyToken, {
-          
-          "type": "template",
-  "altText": "this is a confirm template",
-  "template": {
-    "type": "confirm",
-    "text": "Are you sure?",
-    "actions": [
-      {
-        "type": "message",
-        "label": "Yes",
-        "text": "yes"
-      },
-      {
-        "type": "message",
-        "label": "No",
-        "text": "no"
-      }
-    ]
-  }
-        });
+        return client.replyMessage(event.replyToken, [{
+          type: "text",
+          text: "下記のURLから認証を行ってください"
+        },
+        {
+            type: "text",
+            text: `${authUrl}`
+
+        }
+    ]);
     }
 
 
@@ -61,7 +50,8 @@ export const  handleEvent = async(event: WebhookEvent) => {
     const parsedEvent = parseMessageToEvent(userMessage);
     const userId  = event.source.userId;
     if (!userId)  {
-        return client.replyMessage(event.replyToken, {
+        return client.replyMessage(event.replyToken,
+             {
             type: "text",
             text: "もう一度送信して下さい"
         });
