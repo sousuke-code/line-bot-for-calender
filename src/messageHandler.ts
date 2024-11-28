@@ -57,7 +57,7 @@ export const  handleEvent = async(event: WebhookEvent) => {
         });
     }
     
-    if (parsedEvent && userId) {
+    if (parsedEvent) {
         try {
             const result = await addEventToCalendar(userId , parsedEvent);
             return client.replyMessage(event.replyToken, {
