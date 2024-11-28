@@ -32,7 +32,7 @@ export const  handleEvent = async(event: WebhookEvent) => {
                 text: "もう一度送信して下さい"
             })
         }
-        const authUrl = `https://thyhkmeeivukrfixjnsa.supabase.co/auth/authorize?provider=google`;
+        const authUrl = `https://thyhkmeeivukrfixjnsa.supabase.co/auth/v1/authorize?provider=google`;
         return client.replyMessage(event.replyToken, [{
           type: "text",
           text: "下記のURLから認証を行ってください"
