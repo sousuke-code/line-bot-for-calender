@@ -12,3 +12,17 @@ if (!supabaseUrl || !supabaseAnonKey){
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+
+async function signInWithGoogle() {
+    const { error }  = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+           redirectTo: 'https://thyhkmeeivukrfixjnsa.supabase.co/auth/v1/callback'
+        },
+    })
+
+    if (error) {
+        console.error('Google sigin-in error', error);
+    }
+}
