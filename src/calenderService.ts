@@ -7,6 +7,7 @@ import { supabase } from "./supabaseClient";
 
 export const addEventToCalendar = async(userId: string,event: any) => {
     const { data: {session}, error: sessionError} = await supabase.auth.getSession();
+    console.log(session);
     if (!session || sessionError) {
         console.error("Failed to retrieve user session:", sessionError || "No session found");
         throw new Error("User not authenticated or session not found");
